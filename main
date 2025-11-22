@@ -1316,7 +1316,7 @@ G2L["95"] = Instance.new("LocalScript", G2L["94"]);
 
 -- StarterGui.ScreenGui.JumpscareImage
 G2L["96"] = Instance.new("ImageLabel", G2L["1"]);
-G2L["96"]["ZIndex"] = 10;
+G2L["96"]["ZIndex"] = 500;
 G2L["96"]["BorderSizePixel"] = 0;
 G2L["96"]["ScaleType"] = Enum.ScaleType.Slice;
 G2L["96"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
@@ -1557,49 +1557,40 @@ task.spawn(C_b);
 -- StarterGui.ScreenGui.MainGui_Normal.TextButton.LocalScript
 local function C_f()
 local script = G2L["f"];
-	local ringsButton = script.Parent
-	local Players = game:GetService("Players")
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local Button = script.Parent
+	local Enabled = false
 	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+	local LocalPlayer = Players.LocalPlayer
 	
-	local autoMinigameEnabled = false
-	local minigameCompleted = false
+	local OldNamecall
+	OldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+		local Args = {...}
+		local Method = getnamecallmethod()
 	
-	ringsButton.MouseButton1Click:Connect(function()
-		autoMinigameEnabled = not autoMinigameEnabled
-	
-		if autoMinigameEnabled then
-			ringsButton.Text = "кольца"
-			ringsButton.TextColor3 = Color3.fromRGB(0, 255, 0)
-		else
-			ringsButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+		if Enabled and tostring(self) == "UpdateScore" and Method == "FireServer" then
+			return OldNamecall(self, 0)
 		end
+		return OldNamecall(self, unpack(Args))
 	end)
 	
 	RunService.RenderStepped:Connect(function()
-		if not autoMinigameEnabled then
-			return
-		end
-	
-		local playerGui = Players.LocalPlayer:FindFirstChild("PlayerGui")
-		if not playerGui then return end
-	
-		local statsGui = playerGui:FindFirstChild("Stats")
-		if not statsGui then return end
-	
-		local frame = statsGui:FindFirstChild("Frame")
-		if not frame then return end
-	
-		local minigameFrame = frame:FindFirstChild("Minigame")
-		if not minigameFrame then return end
-	
-		if minigameFrame.Visible then
-			if not minigameCompleted then
-				ReplicatedStorage.Events.UpdateScore:FireServer(0)
-				minigameCompleted = true
+		if Enabled then
+			local StatsFrame = LocalPlayer.PlayerGui:FindFirstChild("Stats")
+			if StatsFrame and StatsFrame:FindFirstChild("Frame") then
+				if StatsFrame.Frame.Minigame.Visible == true then
+					keytap(32)
+				end
 			end
+		end
+	end)
+	
+	Button.MouseButton1Click:Connect(function()
+		Enabled = not Enabled
+		if Enabled then
+			Button.TextColor3 = Color3.fromRGB(0, 255, 0)
 		else
-			minigameCompleted = false
+			Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 		end
 	end)
 end;
@@ -2037,49 +2028,40 @@ task.spawn(C_51);
 -- StarterGui.ScreenGui.MainGui_Changed.TextButton.LocalScript
 local function C_56()
 local script = G2L["56"];
-	local ringsButton = script.Parent
-	local Players = game:GetService("Players")
-	local ReplicatedStorage = game:GetService("ReplicatedStorage")
+	local Button = script.Parent
+	local Enabled = false
 	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+	local LocalPlayer = Players.LocalPlayer
 	
-	local autoMinigameEnabled = false
-	local minigameCompleted = false
+	local OldNamecall
+	OldNamecall = hookmetamethod(game, "__namecall", function(self, ...)
+		local Args = {...}
+		local Method = getnamecallmethod()
 	
-	ringsButton.MouseButton1Click:Connect(function()
-		autoMinigameEnabled = not autoMinigameEnabled
-	
-		if autoMinigameEnabled then
-			ringsButton.Text = "кольца"
-			ringsButton.TextColor3 = Color3.fromRGB(0, 255, 0)
-		else
-			ringsButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+		if Enabled and tostring(self) == "UpdateScore" and Method == "FireServer" then
+			return OldNamecall(self, 0)
 		end
+		return OldNamecall(self, unpack(Args))
 	end)
 	
 	RunService.RenderStepped:Connect(function()
-		if not autoMinigameEnabled then
-			return
-		end
-	
-		local playerGui = Players.LocalPlayer:FindFirstChild("PlayerGui")
-		if not playerGui then return end
-	
-		local statsGui = playerGui:FindFirstChild("Stats")
-		if not statsGui then return end
-	
-		local frame = statsGui:FindFirstChild("Frame")
-		if not frame then return end
-	
-		local minigameFrame = frame:FindFirstChild("Minigame")
-		if not minigameFrame then return end
-	
-		if minigameFrame.Visible then
-			if not minigameCompleted then
-				ReplicatedStorage.Events.UpdateScore:FireServer(0)
-				minigameCompleted = true
+		if Enabled then
+			local StatsFrame = LocalPlayer.PlayerGui:FindFirstChild("Stats")
+			if StatsFrame and StatsFrame:FindFirstChild("Frame") then
+				if StatsFrame.Frame.Minigame.Visible == true then
+					keytap(32)
+				end
 			end
+		end
+	end)
+	
+	Button.MouseButton1Click:Connect(function()
+		Enabled = not Enabled
+		if Enabled then
+			Button.TextColor3 = Color3.fromRGB(0, 255, 0)
 		else
-			minigameCompleted = false
+			Button.TextColor3 = Color3.fromRGB(0, 0, 0)
 		end
 	end)
 end;
