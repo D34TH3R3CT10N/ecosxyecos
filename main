@@ -1688,15 +1688,18 @@ task.spawn(C_1a);
 -- StarterGui.ScreenGui.MainGui_Normal.Frame.TriggerButton.LocalScript
 local function C_2c()
 local script = G2L["2c"];
+	local SoundService = game:GetService("SoundService")
+	local Workspace = game:GetService("Workspace")
+	
 	local button = script.Parent
 	
 	local CLICK_SOUND_ID = "rbxassetid://119592251354946"
 	local clickSound = button:FindFirstChild("ClickSound")
 	if not clickSound then
-	    clickSound = Instance.new("Sound")
-	    clickSound.Name = "ClickSound"
-	    clickSound.SoundId = CLICK_SOUND_ID
-	    clickSound.Parent = button
+		clickSound = Instance.new("Sound")
+		clickSound.Name = "ClickSound"
+		clickSound.SoundId = CLICK_SOUND_ID
+		clickSound.Parent = button
 	end
 	
 	local topScreenGui = script:FindFirstAncestor("ScreenGui")
@@ -1712,41 +1715,71 @@ local script = G2L["2c"];
 	local timeWindow = 2
 	
 	local function activateJumpscare()
-	    button.Visible = false
+		button.Visible = false
 	
-	    jumpscareImage.Visible = true
-	    jumpscareSound:Play()
+		local savedVolumes = {}
 	
-	    task.wait(0.55)
+		local function muteSoundsIn(parent)
+			for _, child in ipairs(parent:GetDescendants()) do
+				if child:IsA("Sound") and child ~= jumpscareSound and child ~= clickSound and child.Playing then
+					savedVolumes[child] = child.Volume
+					child.Volume = 0
+				end
+			end
+		end
 	
-	    jumpscareImage.Visible = false
+		muteSoundsIn(Workspace)
+		muteSoundsIn(SoundService)
 	
-	    local lastPosition = normalGui.Position
-	    changedGui.Position = lastPosition
+		local oldIgnoreInset = topScreenGui.IgnoreGuiInset
+		local oldDisplayOrder = topScreenGui.DisplayOrder
 	
-	    normalGui.Visible = false
-	    changedGui.Visible = true
+		topScreenGui.IgnoreGuiInset = true
+		topScreenGui.DisplayOrder = 10000
+	
+		jumpscareImage.Size = UDim2.new(1, 0, 1, 0)
+		jumpscareImage.Position = UDim2.new(0, 0, 0, 0)
+		jumpscareImage.ZIndex = 10000
+		jumpscareImage.Visible = true
+	
+		jumpscareSound:Play()
+	
+		task.wait(0.55)
+	
+		for s, vol in pairs(savedVolumes) do
+			if s then
+				s.Volume = vol
+			end
+		end
+	
+		jumpscareImage.Visible = false
+	
+		topScreenGui.IgnoreGuiInset = oldIgnoreInset
+		topScreenGui.DisplayOrder = oldDisplayOrder
+	
+		local lastPosition = normalGui.Position
+		changedGui.Position = lastPosition
+	
+		normalGui.Visible = false
+		changedGui.Visible = true
 	end
 	
 	button.MouseButton1Click:Connect(function()
+		clickSound:Play()
 	
-	    clickSound:Play()
+		local currentTime = os.clock()
+		if currentTime - lastClickTime > timeWindow then
+			clickCount = 1
+		else
+			clickCount = clickCount + 1
+		end
+		lastClickTime = currentTime
 	
-	    local currentTime = os.clock()
-	    if currentTime - lastClickTime > timeWindow then
-	        clickCount = 1
-	    else
-	        clickCount = clickCount + 1
-	    end
-	    lastClickTime = currentTime
-	
-	    if clickCount >= clickThreshold then
-	        activateJumpscare()
-	        button.Active = false
-	    end
+		if clickCount >= clickThreshold then
+			activateJumpscare()
+			button.Active = false
+		end
 	end)
-	
-	
 end;
 task.spawn(C_2c);
 -- StarterGui.ScreenGui.MainGui_Normal.TextLabel spawns.LocalScript
