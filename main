@@ -1,8 +1,9 @@
-local useCrashMethod = true
-local kickMessage = "аа модер"
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local modIds = {
-    [128609953] = true, [89249975] = true, [41086907] = true, [147365517] = true,
+    [128609953] = true, [10010285581] = true, [89249975] = true, [41086907] = true, [147365517] = true,
     [24263377] = true, [1518369688] = true, [1266406327] = true, [322627366] = true,
     [90964027] = true, [154193902] = true, [525505449] = true, [2503551073] = true,
     [1044021848] = true, [360111172] = true, [73676182] = true, [23215186] = true,
@@ -14,34 +15,41 @@ local modIds = {
     [676897251] = true, [84703614] = true
 }
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
+local function checkPlayer(player)
+    if modIds[player.UserId] then
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "ModAlert_" .. player.Name
+        screenGui.IgnoreGuiInset = true
+        screenGui.ResetOnSpawn = false
+        screenGui.Parent = PlayerGui
 
-local function Panic()
-    if useCrashMethod then
-        spawn(function()
-            while true do end
-        end)
-        for i = 1, 100 do
-            spawn(function() while true do end end)
-        end
-    else
-        LocalPlayer:Kick(kickMessage)
+        local label = Instance.new("TextLabel")
+        label.Parent = screenGui
+        label.Size = UDim2.new(0, 400, 0, 60)
+        label.Position = UDim2.new(0.6, 0, 0.5, 0)
+        label.AnchorPoint = Vector2.new(0, 0.5)
+        label.BackgroundTransparency = 1
+        label.Text = "аа модер: " .. player.DisplayName .. " (@" .. player.Name .. ")"
+        label.TextColor3 = Color3.new(1, 1, 0)
+        label.TextStrokeTransparency = 0
+        label.TextSize = 26
+        label.Font = Enum.Font.GothamBold
+    end
+end
+
+local function removeAlert(player)
+    local alert = PlayerGui:FindFirstChild("ModAlert_" .. player.Name)
+    if alert then
+        alert:Destroy()
     end
 end
 
 for _, player in ipairs(Players:GetPlayers()) do
-    if modIds[player.UserId] then
-        Panic()
-        break
-    end
+    checkPlayer(player)
 end
 
-Players.PlayerAdded:Connect(function(player)
-    if modIds[player.UserId] then
-        Panic()
-    end
-end)
+Players.PlayerAdded:Connect(checkPlayer)
+Players.PlayerRemoving:Connect(removeAlert)
 
 
 local G2L = {};
