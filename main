@@ -1299,7 +1299,7 @@ G2L["93"]["TextColor3"] = Color3.fromRGB(0, 0, 0);
 G2L["93"]["BackgroundTransparency"] = 1;
 G2L["93"]["Size"] = UDim2.new(0, 406, 0, 50);
 G2L["93"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
-G2L["93"]["Text"] = [[открывать/закрывать на P]];
+G2L["93"]["Text"] = [[открывать/закрывать на J]];
 G2L["93"]["Name"] = [[HintLabel]];
 G2L["93"]["Position"] = UDim2.new(0.73241, 0, 0, 0);
 
@@ -1353,7 +1353,7 @@ local script = G2L["2"];
 	UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
 		if gameProcessedEvent then return end
 	
-		if input.KeyCode == Enum.KeyCode.P then
+		if input.KeyCode == Enum.KeyCode.J then
 			if not hasBeenOpenedOnce then
 				hasBeenOpenedOnce = true
 				hintLabel.Visible = false
