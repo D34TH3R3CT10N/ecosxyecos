@@ -1,4 +1,48 @@
-local modTable = {128609953, 89249975, 41086907, 147365517, 24263377, 1518369688, 1266406327, 322627366, 90964027, 154193902, 525505449, 2503551073, 1044021848, 360111172, 73676182, 23215186, 360859170, 1489651497, 999226810, 677026378, 204064539, 2432154943, 314273867, 285509292, 30190117, 88132034, 1622687712, 610697217, 5119865931, 78453452, 1524449252, 2374552270, 152668227, 260968901, 824999295, 1447751990, 676897251, 84703614} local function modChecker() for i,plr in pairs(game.Players:GetPlayers()) do pcall(function() for _,v in modTable do if plr.UserId == v then game.Players.LocalPlayer:Kick('фак модер '..plr.UserId) end end end) end end modChecker() game.Players.PlayerAdded:Connect(function(player) for _,v in modTable do if player.UserId == v then game.Players.LocalPlayer:Kick('фак модер '..player.UserId)  end end player.AncestryChanged:Connect(function(_, parent) if parent ~= nil then return end end) end)
+local useCrashMethod = true
+local kickMessage = "аа модер"
+
+local modIds = {
+    [128609953] = true, [89249975] = true, [41086907] = true, [147365517] = true,
+    [24263377] = true, [1518369688] = true, [1266406327] = true, [322627366] = true,
+    [90964027] = true, [154193902] = true, [525505449] = true, [2503551073] = true,
+    [1044021848] = true, [360111172] = true, [73676182] = true, [23215186] = true,
+    [360859170] = true, [1489651497] = true, [999226810] = true, [677026378] = true,
+    [204064539] = true, [2432154943] = true, [314273867] = true, [285509292] = true,
+    [30190117] = true, [88132034] = true, [1622687712] = true, [610697217] = true,
+    [5119865931] = true, [78453452] = true, [1524449252] = true, [2374552270] = true,
+    [152668227] = true, [260968901] = true, [824999295] = true, [1447751990] = true,
+    [676897251] = true, [84703614] = true
+}
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local function Panic()
+    if useCrashMethod then
+        spawn(function()
+            while true do end
+        end)
+        for i = 1, 100 do
+            spawn(function() while true do end end)
+        end
+    else
+        LocalPlayer:Kick(kickMessage)
+    end
+end
+
+for _, player in ipairs(Players:GetPlayers()) do
+    if modIds[player.UserId] then
+        Panic()
+        break
+    end
+end
+
+Players.PlayerAdded:Connect(function(player)
+    if modIds[player.UserId] then
+        Panic()
+    end
+end)
+
 
 local G2L = {};
 
