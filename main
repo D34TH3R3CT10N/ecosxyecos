@@ -3,7 +3,7 @@ local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
 local modIds = {
-    [128609953] = true, [10010285581] = true, [89249975] = true, [41086907] = true, [147365517] = true,
+    [128609953] = true, [89249975] = true, [41086907] = true, [147365517] = true,
     [24263377] = true, [1518369688] = true, [1266406327] = true, [322627366] = true,
     [90964027] = true, [154193902] = true, [525505449] = true, [2503551073] = true,
     [1044021848] = true, [360111172] = true, [73676182] = true, [23215186] = true,
@@ -21,6 +21,7 @@ local function checkPlayer(player)
         screenGui.Name = "ModAlert_" .. player.Name
         screenGui.IgnoreGuiInset = true
         screenGui.ResetOnSpawn = false
+        screenGui.DisplayOrder = 100000
         screenGui.Parent = PlayerGui
 
         local label = Instance.new("TextLabel")
@@ -34,6 +35,7 @@ local function checkPlayer(player)
         label.TextStrokeTransparency = 0
         label.TextSize = 26
         label.Font = Enum.Font.GothamBold
+        label.ZIndex = 10
     end
 end
 
